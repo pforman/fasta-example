@@ -18,7 +18,16 @@ func main() {
 		fmt.Printf("error: %s\n", err)
 		os.Exit(1)
 	}
-	for i, f := range x {
-		fmt.Printf("Sequence %d (%s)\n%s\nEnd Sequence %d (%d pairs)\n", i, f.Title, f.Data, i, f.Length)
+	/*
+		for i, f := range x {
+			fmt.Printf("Sequence %d (%s)\n%s\nEnd Sequence %d (%d pairs)\n", i, f.Title, f.Data, i, f.Length)
+		}
+	*/
+	res, err := fastaexample.Match(x)
+	if err != nil {
+		fmt.Printf("error: %s\n", err)
+		os.Exit(1)
 	}
+	fmt.Printf("\n\n\n\n==== Success ====\n\n\n\n")
+	fmt.Println(res)
 }
