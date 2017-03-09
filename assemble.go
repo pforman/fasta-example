@@ -5,11 +5,13 @@ import (
 	"strings"
 )
 
-func matchPairs(s1, s2 *FastaFrag, th int) (*FastaFrag, error) {
+// assemble attempts to match s2 onto s1, with a match of at least th in
+// length.  s1 must be at least the length of s2, not shorter.
+func assemble(s1, s2 *FastaFrag, th int) (*FastaFrag, error) {
 
 	// Safety check
-	if s1.Length < s2.Length {
-		return nil, fmt.Errorf("matchPairs called with misordered arguments, len(s1) < len(s2)")
+	if len(s1.Data) < len(s2.Data) {
+		return nil, fmt.Errorf("assemble called with misordered arguments, len(s1) < len(s2)")
 	}
 
 	// Check for fully contained match first
@@ -17,12 +19,12 @@ func matchPairs(s1, s2 *FastaFrag, th int) (*FastaFrag, error) {
 		return s1, nil
 	}
 
-	if s2.Length < th {
+	if len(s2.Data) < th {
 		return nil, fmt.Errorf("sequence '%s' in fragment %s is shorter than threshold %d", s2.Data, s2.Title, th)
 	}
 
 	prefix := s2.Data[:th]
-	suffix := s2.Data[s2.Length-th:]
+	suffix := s2.Data[len(s2.Data)-th:]
 
 	// Check for a prefix match, ie S1..S2
 	i := strings.LastIndex(s1.Data, prefix)
@@ -35,9 +37,8 @@ func matchPairs(s1, s2 *FastaFrag, th int) (*FastaFrag, error) {
 			data := s1.Data[:i] + s2.Data
 
 			return &FastaFrag{
-				Title:  title,
-				Data:   data,
-				Length: len(data),
+				Title: title,
+				Data:  data,
 			}, nil
 		}
 	}
@@ -50,12 +51,11 @@ func matchPairs(s1, s2 *FastaFrag, th int) (*FastaFrag, error) {
 		if strings.HasSuffix(s2.Data, match) {
 			// Concat the titles and the data
 			title := fmt.Sprintf("%s+%s", s2.Title, s1.Title)
-			data := s2.Data[:s2.Length-len(match)] + s1.Data
+			data := s2.Data[:len(s2.Data)-len(match)] + s1.Data
 
 			return &FastaFrag{
-				Title:  title,
-				Data:   data,
-				Length: len(data),
+				Title: title,
+				Data:  data,
 			}, nil
 		}
 	}

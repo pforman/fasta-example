@@ -20,7 +20,7 @@ func main() {
 	}
 	/*
 		for i, f := range x {
-			fmt.Printf("Sequence %d (%s)\n%s\nEnd Sequence %d (%d pairs)\n", i, f.Title, f.Data, i, f.Length)
+			fmt.Printf("Sequence %d (%s)\n%s\nEnd Sequence %d (%d pairs)\n", i, f.Title, f.Data, i, len(f.Data))
 		}
 	*/
 	res, err := fastaexample.Match(x)

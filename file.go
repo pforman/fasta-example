@@ -6,11 +6,12 @@ import (
 	"strings"
 )
 
+// ReadFile reads a given file and converts FASTA sequence to an array for assembly
 func ReadFile(file string) ([]*FastaFrag, error) {
 	var frags []*FastaFrag
 
 	// Slurp in the whole file.  Line-by-line parsing might
-	// be an improvement
+	// be an improvement here
 	data, err := ioutil.ReadFile(file)
 	if err != nil {
 		return nil, err
@@ -48,7 +49,6 @@ func fragFromChunk(c string) (*FastaFrag, error) {
 
 	f.Title = t
 	f.Data = seq
-	f.Length = len(seq)
 
 	return &f, nil
 }

@@ -5,6 +5,8 @@ import (
 	//"strings"
 )
 
+// Match attempts to assemble the array of fragments
+// Match utilizes recurseMatch to do the assembly, but hides the implementation
 func Match(frags []*FastaFrag) (string, error) {
 
 	// begin at the beginning
@@ -19,6 +21,10 @@ func Match(frags []*FastaFrag) (string, error) {
 	return "", fmt.Errorf("no full match found")
 }
 
+// recurseMatch iterates through the list of fragments, attempting to match one
+// onto the previously assembled base.  On success, recurse with the matched
+// fragment removed from the list.  When the list is empty, assembly is complete.
+// If the end of the list is reached with no match, assembly has failed.
 func recurseMatch(base *FastaFrag, frags []*FastaFrag) (bool, *FastaFrag) {
 	var err error
 	var res *FastaFrag
@@ -28,27 +34,31 @@ func recurseMatch(base *FastaFrag, frags []*FastaFrag) (bool, *FastaFrag) {
 		return true, base
 	}
 
-	fmt.Printf("rM: len %d, base: %d\n", len(frags), base.Length)
+	// TODO: debug info only
+	fmt.Printf("rM: len %d, base: %d\n", len(frags), len(base.Data))
 
 	for i, f := range frags {
-		if f.Length < base.Length {
-			res, err = matchPairs(base, f, (f.Length/2)+1)
+		if len(f.Data) < len(base.Data) {
+			res, err = assemble(base, f, (len(f.Data)/2)+1)
 		} else {
 			// unlikely, other than on the first match,
-			// but matchPairs() is strict about s1 > s2
-			res, err = matchPairs(f, base, (base.Length/2)+1)
+			// but matchPairs() is strict about s1 >= s2
+			res, err = assemble(f, base, (len(base.Data)/2)+1)
 		}
 		if err != nil {
+			// TODO: quiet this or put it in debug
 			fmt.Printf("trouble matching index %d of %d, skipping\n", i, len(frags))
 			fmt.Printf("error was: %s\n", err)
 			continue
 		}
-		// continue on with the matched fragment placed and removed from the list
+		// continue on with the matched fragment placed on the base
+		// and removed from the list
 		complete, final := recurseMatch(res, append(frags[:i], frags[i+1:]...))
 		if complete {
 			return complete, final
 		}
 	}
-	fmt.Printf("bottomed out, no good\n")
+
+	// If we reach this, we have unmatchable fragments.
 	return false, nil
 }
