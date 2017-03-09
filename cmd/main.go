@@ -8,7 +8,6 @@ import (
 )
 
 func main() {
-	fastaexample.Noop()
 	if len(os.Args) != 2 {
 		fmt.Printf("Usage: %s filename\n", os.Args[0])
 		os.Exit(1)
