@@ -14,13 +14,14 @@ func assemble(s1, s2 *FastaFrag, th int) (*FastaFrag, error) {
 		return nil, fmt.Errorf("assemble called with misordered arguments, len(s1) < len(s2)")
 	}
 
+	// Threshold check
+	if len(s2.Data) < th {
+		return nil, fmt.Errorf("sequence '%s' in fragment %s is shorter than threshold %d", s2.Data, s2.Title, th)
+	}
+
 	// Check for fully contained match first
 	if strings.Contains(s1.Data, s2.Data) {
 		return s1, nil
-	}
-
-	if len(s2.Data) < th {
-		return nil, fmt.Errorf("sequence '%s' in fragment %s is shorter than threshold %d", s2.Data, s2.Title, th)
 	}
 
 	prefix := s2.Data[:th]

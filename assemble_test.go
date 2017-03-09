@@ -17,7 +17,7 @@ func TestWrongOrderMatch(t *testing.T) {
 	}
 
 	f, err := assemble(&s2, &s1, 4)
-	if err == nil && f != nil {
+	if err == nil || f != nil {
 		t.Errorf("assemble failed to produce an error on an incorrect case")
 	}
 }
@@ -34,8 +34,8 @@ func TestShortMatch(t *testing.T) {
 		Data:  "CTGG",
 	}
 
-	f, err := assemble(&s2, &s1, 5)
-	if err == nil && f != nil {
+	f, err := assemble(&s1, &s2, 5)
+	if err == nil || f != nil {
 		t.Errorf("assemble failed to produce an error on an incorrect case")
 	}
 }

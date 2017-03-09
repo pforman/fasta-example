@@ -22,10 +22,10 @@ func ReadFile(file string) ([]*FastaFrag, error) {
 	chunks := strings.Split(string(data), ">")[1:]
 	for _, c := range chunks {
 		f, err := fragFromChunk(c)
-		frags = append(frags, f)
 		if err != nil {
 			return nil, err
 		}
+		frags = append(frags, f)
 	}
 	return frags, nil
 }
@@ -59,8 +59,6 @@ func sanityCheckSequence(d string) bool {
 			strings.Replace(
 				strings.Replace(d, "A", "", -1), "C", "", -1), "G", "", -1), "T", "", -1)
 	if len(sane) > 0 {
-		// temporary Printf
-		fmt.Printf("wat, remainder of sequence is '%s'\n", sane)
 		return false
 	}
 	return true
