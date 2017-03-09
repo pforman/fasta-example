@@ -2,7 +2,7 @@ package fastaexample
 
 import (
 	"fmt"
-	//"strings"
+	"os"
 )
 
 // Match attempts to assemble the array of fragments
@@ -34,8 +34,9 @@ func recurseMatch(base *FastaFrag, frags []*FastaFrag) (bool, *FastaFrag) {
 		return true, base
 	}
 
-	// TODO: debug info only
-	fmt.Printf("rM: len %d, base: %d\n", len(frags), len(base.Data))
+	if debug {
+		fmt.Fprintf(os.Stderr, "recurseMatch: frags %d, current base length: %d\n", len(frags), len(base.Data))
+	}
 
 	for i, f := range frags {
 		if len(f.Data) < len(base.Data) {
@@ -46,9 +47,11 @@ func recurseMatch(base *FastaFrag, frags []*FastaFrag) (bool, *FastaFrag) {
 			res, err = assemble(f, base, (len(base.Data)/2)+1)
 		}
 		if err != nil {
-			// TODO: quiet this or put it in debug
-			fmt.Printf("trouble matching index %d of %d, skipping\n", i, len(frags))
-			fmt.Printf("error was: %s\n", err)
+			if debug {
+				// TODO: error-type this or signal with nil
+				fmt.Fprintf(os.Stderr, "trouble matching index %d of %d, skipping\n", i, len(frags))
+				fmt.Fprintf(os.Stderr, "error was: %s\n", err)
+			}
 			continue
 		}
 		// continue on with the matched fragment placed on the base

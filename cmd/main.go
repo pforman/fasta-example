@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"os"
 
@@ -8,25 +9,52 @@ import (
 )
 
 func main() {
-	if len(os.Args) != 2 {
-		fmt.Printf("Usage: %s filename\n", os.Args[0])
+	var debug bool
+	var title string
+	var wrap int
+
+	flag.Usage = func() {
+		fmt.Fprintf(os.Stderr, "Usage: %s filename\n", os.Args[0])
+		flag.PrintDefaults()
+	}
+
+	flag.BoolVar(&debug, "d", false, "debug")
+	flag.StringVar(&title, "t", "", "title")
+	flag.IntVar(&wrap, "w", 0, "line wrap length")
+
+	flag.Parse()
+
+	if len(flag.Args()) != 1 {
+		flag.Usage()
 		os.Exit(1)
 	}
-	x, err := fastaexample.ReadFile(os.Args[1])
+
+	fastaexample.SetDebug(debug)
+
+	x, err := fastaexample.ReadFile(flag.Args()[0])
 	if err != nil {
 		fmt.Printf("error: %s\n", err)
 		os.Exit(1)
 	}
-	/*
-		for i, f := range x {
-			fmt.Printf("Sequence %d (%s)\n%s\nEnd Sequence %d (%d pairs)\n", i, f.Title, f.Data, i, len(f.Data))
+
+	seq, err := fastaexample.Match(x)
+	if err != nil {
+		fmt.Printf("error: %s\n", err)
+		os.Exit(1)
+	}
+
+	// Add a title (description) before the sequence
+	if title != "" {
+		fmt.Printf(">%s\n", title)
+	}
+
+	// If we asked to linewrap, chunk up the data until we're under that length
+	if wrap != 0 {
+		for len(seq) > wrap {
+			fmt.Println(seq[:wrap])
+			seq = seq[wrap:]
 		}
-	*/
-	res, err := fastaexample.Match(x)
-	if err != nil {
-		fmt.Printf("error: %s\n", err)
-		os.Exit(1)
 	}
-	fmt.Printf("\n\n\n\n==== Success ====\n\n\n\n")
-	fmt.Println(res)
+	// Print whatever is left over, or everything if we didn't wrap.
+	fmt.Println(seq)
 }
