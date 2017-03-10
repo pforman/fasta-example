@@ -6,9 +6,22 @@ import (
 	"strings"
 )
 
-// ReadFile reads a given file and converts FASTA sequence to an array for assembly
-func ReadFile(file string) ([]*FastaFrag, error) {
-	var frags []*FastaFrag
+// AssembleFile reads a file and assembles the contents
+func AssembleFile(file string) (string, error) {
+	frags, err := readFile(file)
+	if err != nil {
+		return "", err
+	}
+	seq, err := match(frags)
+	if err != nil {
+		return "", err
+	}
+	return seq, nil
+}
+
+// readFile reads a given file and converts FASTA sequence to an array for assembly
+func readFile(file string) ([]*fastaFrag, error) {
+	var frags []*fastaFrag
 
 	// Slurp in the whole file.  Line-by-line parsing might
 	// be an improvement here
@@ -30,8 +43,8 @@ func ReadFile(file string) ([]*FastaFrag, error) {
 	return frags, nil
 }
 
-func fragFromChunk(c string) (*FastaFrag, error) {
-	var f FastaFrag
+func fragFromChunk(c string) (*fastaFrag, error) {
+	var f fastaFrag
 
 	// clean up the data, strip off the title
 	data := strings.SplitN(c, "\n", 2)

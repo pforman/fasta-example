@@ -6,12 +6,12 @@ import (
 
 func TestWrongOrderMatch(t *testing.T) {
 
-	s1 := FastaFrag{
+	s1 := fastaFrag{
 		Title: "test1",
 		Data:  "ACTGGTCA",
 	}
 
-	s2 := FastaFrag{
+	s2 := fastaFrag{
 		Title: "test2",
 		Data:  "CTGG",
 	}
@@ -24,12 +24,12 @@ func TestWrongOrderMatch(t *testing.T) {
 
 func TestShortMatch(t *testing.T) {
 
-	s1 := FastaFrag{
+	s1 := fastaFrag{
 		Title: "test1",
 		Data:  "ACTGGTCA",
 	}
 
-	s2 := FastaFrag{
+	s2 := fastaFrag{
 		Title: "test2",
 		Data:  "CTGG",
 	}
@@ -42,12 +42,12 @@ func TestShortMatch(t *testing.T) {
 
 func TestContainsMatch(t *testing.T) {
 
-	s1 := FastaFrag{
+	s1 := fastaFrag{
 		Title: "test1",
 		Data:  "ACTGGTCA",
 	}
 
-	s2 := FastaFrag{
+	s2 := fastaFrag{
 		Title: "test2",
 		Data:  "CTGG",
 	}
@@ -63,12 +63,12 @@ func TestContainsMatch(t *testing.T) {
 
 func TestPrefixMatch(t *testing.T) {
 
-	s1 := FastaFrag{
+	s1 := fastaFrag{
 		Title: "test1",
 		Data:  "ACTGGTCAAGGTCA",
 	}
 
-	s2 := FastaFrag{
+	s2 := fastaFrag{
 		Title: "test2",
 		Data:  "AAGGTCAGG",
 	}
@@ -89,12 +89,12 @@ func TestFalsePrefixMatch(t *testing.T) {
 
 	// Close but not quite.  Matches threshold, but fails a complete match
 	// AAGGTCG.. != ..AAGGTCA
-	s1 := FastaFrag{
+	s1 := fastaFrag{
 		Title: "test1",
 		Data:  "ACTGGTCAAGGTCA",
 	}
 
-	s2 := FastaFrag{
+	s2 := fastaFrag{
 		Title: "test2",
 		Data:  "AAGGTCGGG",
 	}
@@ -107,12 +107,12 @@ func TestFalsePrefixMatch(t *testing.T) {
 
 func TestSuffixMatch(t *testing.T) {
 
-	s1 := FastaFrag{
+	s1 := fastaFrag{
 		Title: "test1",
 		Data:  "ACTGGTCAAGGTCG",
 	}
 
-	s2 := FastaFrag{
+	s2 := fastaFrag{
 		Title: "test2",
 		Data:  "AAGGTCACTGG",
 	}
@@ -133,12 +133,12 @@ func TestFalseSuffixMatch(t *testing.T) {
 
 	// Close but not quite.  Matches threshold, but fails a complete match
 	// TACTGG.. != ..CACTGG
-	s1 := FastaFrag{
+	s1 := fastaFrag{
 		Title: "test1",
 		Data:  "TACTGGTCAAGGTCG",
 	}
 
-	s2 := FastaFrag{
+	s2 := fastaFrag{
 		Title: "test2",
 		Data:  "AAGGTCACTGG",
 	}

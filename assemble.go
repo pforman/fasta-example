@@ -7,7 +7,7 @@ import (
 
 // assemble attempts to match s2 onto s1, with a match of at least th in
 // length.  s1 must be at least the length of s2, not shorter.
-func assemble(s1, s2 *FastaFrag, th int) (*FastaFrag, error) {
+func assemble(s1, s2 *fastaFrag, th int) (*fastaFrag, error) {
 
 	// Safety check
 	if len(s1.Data) < len(s2.Data) {
@@ -37,7 +37,7 @@ func assemble(s1, s2 *FastaFrag, th int) (*FastaFrag, error) {
 			title := fmt.Sprintf("%s+%s", s1.Title, s2.Title)
 			data := s1.Data[:i] + s2.Data
 
-			return &FastaFrag{
+			return &fastaFrag{
 				Title: title,
 				Data:  data,
 			}, nil
@@ -54,7 +54,7 @@ func assemble(s1, s2 *FastaFrag, th int) (*FastaFrag, error) {
 			title := fmt.Sprintf("%s+%s", s2.Title, s1.Title)
 			data := s2.Data[:len(s2.Data)-len(match)] + s1.Data
 
-			return &FastaFrag{
+			return &fastaFrag{
 				Title: title,
 				Data:  data,
 			}, nil

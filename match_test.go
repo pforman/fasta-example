@@ -1,6 +1,7 @@
 package fastaexample
 
 import (
+	"os"
 	"testing"
 )
 
@@ -15,19 +16,19 @@ func TestMatch(t *testing.T) {
 		{"testdata/match-fail", "", false},
 	}
 	for _, v := range cases {
-		frags, err := ReadFile(v.file)
+		frags, err := readFile(v.file)
 		if err != nil {
 			t.Errorf("TestMatch generated unrelated error in ReadFile\n")
 		}
-		result, err := Match(frags)
+		result, err := match(frags)
 		if v.want && err != nil {
-			t.Errorf("Match(%s) produced an error on a correct case: %v\n", v.file, err)
+			t.Errorf("match(%s) produced an error on a correct case: %v\n", v.file, err)
 		}
 		if v.want && v.sequence != result {
-			t.Errorf("Match(%s) expected %s got %s", v.file, v.sequence, result)
+			t.Errorf("match(%s) expected %s got %s", v.file, v.sequence, result)
 		}
 		if !v.want && err == nil {
-			t.Errorf("Match(%s) failed to produce an error on an incorrect case", v.file)
+			t.Errorf("match(%s) failed to produce an error on an incorrect case", v.file)
 		}
 	}
 }
@@ -44,20 +45,25 @@ func TestMatchWithDebug(t *testing.T) {
 	}
 	// Turn debug on to cover those code paths
 	SetDebug(true)
+	// Quiet the logger during testing
+	devnull, _ := os.Open("/dev/null")
+	logger.SetOutput(devnull)
 	for _, v := range cases {
-		frags, err := ReadFile(v.file)
+		frags, err := readFile(v.file)
 		if err != nil {
 			t.Errorf("TestMatch generated unrelated error in ReadFile\n")
 		}
-		result, err := Match(frags)
+		result, err := match(frags)
 		if v.want && err != nil {
-			t.Errorf("Match(%s) produced an error on a correct case: %v\n", v.file, err)
+			t.Errorf("match(%s) produced an error on a correct case: %v\n", v.file, err)
 		}
 		if v.want && v.sequence != result {
-			t.Errorf("Match(%s) expected %s got %s", v.file, v.sequence, result)
+			t.Errorf("match(%s) expected %s got %s", v.file, v.sequence, result)
 		}
 		if !v.want && err == nil {
-			t.Errorf("Match(%s) failed to produce an error on an incorrect case", v.file)
+			t.Errorf("match(%s) failed to produce an error on an incorrect case", v.file)
 		}
 	}
+	// Turn the logger back on
+	logger.SetOutput(os.Stderr)
 }

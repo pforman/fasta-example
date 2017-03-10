@@ -1,7 +1,7 @@
 package fastaexample
 
 // FastaFrag contains the information for a fragment, Title and Data
-type FastaFrag struct {
+type fastaFrag struct {
 	Title string
 	Data  string
 }

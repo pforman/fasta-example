@@ -2,12 +2,11 @@ package fastaexample
 
 import (
 	"fmt"
-	"os"
 )
 
 // Match attempts to assemble the array of fragments
 // Match utilizes recurseMatch to do the assembly, but hides the implementation
-func Match(frags []*FastaFrag) (string, error) {
+func match(frags []*fastaFrag) (string, error) {
 
 	// begin at the beginning
 	base := frags[0]
@@ -15,6 +14,9 @@ func Match(frags []*FastaFrag) (string, error) {
 
 	complete, final := recurseMatch(base, frags)
 	if complete {
+		if debug {
+			logger.Printf("final path: %v\n", final.Title)
+		}
 		return final.Data, nil
 	}
 
@@ -25,9 +27,9 @@ func Match(frags []*FastaFrag) (string, error) {
 // onto the previously assembled base.  On success, recurse with the matched
 // fragment removed from the list.  When the list is empty, assembly is complete.
 // If the end of the list is reached with no match, assembly has failed.
-func recurseMatch(base *FastaFrag, frags []*FastaFrag) (bool, *FastaFrag) {
+func recurseMatch(base *fastaFrag, frags []*fastaFrag) (bool, *fastaFrag) {
 	var err error
-	var res *FastaFrag
+	var res *fastaFrag
 
 	// If we've reached an empty fragment list, we're done.
 	if len(frags) == 0 {
@@ -35,7 +37,8 @@ func recurseMatch(base *FastaFrag, frags []*FastaFrag) (bool, *FastaFrag) {
 	}
 
 	if debug {
-		fmt.Fprintf(os.Stderr, "recurseMatch: frags %d, current base length: %d\n", len(frags), len(base.Data))
+		//fmt.Fprintf(os.Stderr, "recurseMatch: frags %d, current base length: %d\n", len(frags), len(base.Data))
+		logger.Printf("recurseMatch: frags %d, current base length: %d\n", len(frags), len(base.Data))
 	}
 
 	for i, f := range frags {
@@ -49,8 +52,10 @@ func recurseMatch(base *FastaFrag, frags []*FastaFrag) (bool, *FastaFrag) {
 		if err != nil {
 			if debug {
 				// TODO: error-type this or signal with nil
-				fmt.Fprintf(os.Stderr, "trouble matching index %d of %d, skipping\n", i, len(frags))
-				fmt.Fprintf(os.Stderr, "error was: %s\n", err)
+				//fmt.Fprintf(os.Stderr, "trouble matching index %d of %d, skipping\n", i, len(frags))
+				//fmt.Fprintf(os.Stderr, "error was: %s\n", err)
+				logger.Printf("trouble matching index %d of %d, skipping\n", i, len(frags))
+				logger.Printf("error was: %s\n", err)
 			}
 			continue
 		}

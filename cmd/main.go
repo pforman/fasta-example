@@ -29,15 +29,11 @@ func main() {
 		os.Exit(1)
 	}
 
+	// Turn on the debug logger if necessary
 	fastaexample.SetDebug(debug)
 
-	x, err := fastaexample.ReadFile(flag.Args()[0])
-	if err != nil {
-		fmt.Printf("error: %s\n", err)
-		os.Exit(1)
-	}
-
-	seq, err := fastaexample.Match(x)
+	// Read the file and assemble the fragments, or fail trying
+	seq, err := fastaexample.AssembleFile(flag.Args()[0])
 	if err != nil {
 		fmt.Printf("error: %s\n", err)
 		os.Exit(1)

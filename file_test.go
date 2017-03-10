@@ -4,6 +4,28 @@ import (
 	"testing"
 )
 
+func TestAssembleFile(t *testing.T) {
+
+	cases := []struct {
+		file string
+		want bool
+	}{
+		{"testdata/1clean.txt", true},
+		{"testdata/2dirty.txt", false},
+		{"testdata/match-success", true},
+		{"testdata/match-fail", false},
+	}
+	for _, v := range cases {
+		_, err := AssembleFile(v.file)
+		if v.want && err != nil {
+			t.Errorf("readFile(%s) produced an error on a correct case: %v\n", v.file, err)
+		}
+		if !v.want && err == nil {
+			t.Errorf("readFile(%s) failed to produce an error on an incorrect case", v.file)
+		}
+	}
+}
+
 func TestReadFile(t *testing.T) {
 
 	cases := []struct {
@@ -20,15 +42,15 @@ func TestReadFile(t *testing.T) {
 		{"testdata/nonexistant", 0, false},
 	}
 	for _, v := range cases {
-		result, err := ReadFile(v.file)
+		result, err := readFile(v.file)
 		if v.want && err != nil {
-			t.Errorf("ReadFile(%s) produced an error on a correct case: %v\n", v.file, err)
+			t.Errorf("readFile(%s) produced an error on a correct case: %v\n", v.file, err)
 		}
 		if v.want && v.length != len(result) {
-			t.Errorf("ReadFile(%s) wanted %d successes, got %d", v.file, v.length, len(result))
+			t.Errorf("readFile(%s) wanted %d successes, got %d", v.file, v.length, len(result))
 		}
 		if !v.want && err == nil {
-			t.Errorf("ReadFile(%s) failed to produce an error on an incorrect case", v.file)
+			t.Errorf("readFile(%s) failed to produce an error on an incorrect case", v.file)
 		}
 	}
 }

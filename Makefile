@@ -14,3 +14,6 @@ test:
 coverage:
 	go test -coverprofile=c.out
 	go tool cover -func=c.out
+
+coverage-report: coverage
+	gocov convert c.out | gocov annotate -
