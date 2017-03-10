@@ -61,6 +61,6 @@ func assemble(s1, s2 *fastaFrag, th int) (*fastaFrag, error) {
 		}
 	}
 
-	// Seems like a good candidate for an error type
-	return nil, fmt.Errorf("no match found")
+	// This is a non-fatal error, we can try to place this fragment later
+	return nil, placeError("placement failed")
 }
