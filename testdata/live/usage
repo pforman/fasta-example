@@ -1,0 +1,6 @@
+Usage: ./fasta-example filename
+  -d	Enable debug info
+  -t string
+    	Set FASTA title/description
+  -w int
+    	Wrap lines at specified length

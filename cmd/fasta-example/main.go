@@ -18,9 +18,9 @@ func main() {
 		flag.PrintDefaults()
 	}
 
-	flag.BoolVar(&debug, "d", false, "debug")
-	flag.StringVar(&title, "t", "", "title")
-	flag.IntVar(&wrap, "w", 0, "line wrap length")
+	flag.BoolVar(&debug, "d", false, "Enable debug info")
+	flag.StringVar(&title, "t", "", "Set FASTA title/description")
+	flag.IntVar(&wrap, "w", 0, "Wrap lines at specified length")
 
 	flag.Parse()
 
@@ -45,7 +45,7 @@ func main() {
 	}
 
 	// If we asked to linewrap, chunk up the data until we're under that length
-	if wrap != 0 {
+	if wrap > 0 {
 		for len(seq) > wrap {
 			fmt.Println(seq[:wrap])
 			seq = seq[wrap:]

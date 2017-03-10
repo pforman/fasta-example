@@ -33,6 +33,31 @@ func TestMatch(t *testing.T) {
 	}
 }
 
+func TestRecurseMatchWithBadData(t *testing.T) {
+
+	base := fastaFrag{
+		Title: "base",
+		Data:  "ACGTTACGTTACG",
+	}
+	// in order to induce a failure in assemble, we use an empty string
+	// recurseMatch will pass that with a threshold of len/2 +1 = 1.
+	frags := []*fastaFrag{
+		{
+			Title: "good",
+			Data:  "AACGTTGA",
+		},
+		{
+			Title: "bad",
+			Data:  "",
+		},
+	}
+
+	_, err := recurseMatch(&base, frags)
+	if err == nil {
+		t.Errorf("TestRecurseMatch failed to generate an error on bad data\n")
+	}
+}
+
 func TestMatchWithDebug(t *testing.T) {
 
 	cases := []struct {

@@ -38,6 +38,7 @@ func TestReadFile(t *testing.T) {
 		{"testdata/3trailingspace.txt", 0, false},
 		{"testdata/4blanklines.txt", 4, true},
 		{"testdata/5multiline.txt", 5, true},
+		{"testdata/6emptysequence.txt", 0, false},
 		// this file should not exist
 		{"testdata/nonexistant", 0, false},
 	}
