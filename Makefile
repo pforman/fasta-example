@@ -1,4 +1,4 @@
-all: build test coverage live-test
+all: build test live-test
 
 build: fasta-example
 
@@ -9,7 +9,7 @@ install:
 	go install ./...
 
 test:
-	go test
+	go test -v
 
 coverage:
 	go test -coverprofile=c.out
